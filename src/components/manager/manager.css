@@ -1,0 +1,19 @@
+.table-emails {
+    width: 40em;
+}
+.thead-emails {
+    width: 20em;
+}
+.email-add-button {
+    width: 40em;
+    justify-content: end;
+    align-content: end;
+    display: grid;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.email-add-button button, .email-add-button button:hover {
+    background-color: transparent;
+    border-color: transparent;
+}
