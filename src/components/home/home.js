@@ -7,9 +7,11 @@ import {
   Form,
   Row,
   Col,
+  Jumbotron
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './home.css';
+
 const React = require('react');
 
 const HomeComponent = (props) => {
@@ -28,7 +30,12 @@ const HomeComponent = (props) => {
                 63Hz
               </Col>
               <Col sm={4} md={4} lg={4}>
-                lapiz
+              <Button variant="primary mt-4" type="button">
+              Editar
+              </Button> 
+              <Button variant="danger mt-4" type="button">
+              Borrar
+              </Button> 
               </Col>
             </Row>
             
@@ -69,7 +76,7 @@ const HomeComponent = (props) => {
                     </Form.Group>
                   </Col>
                   <Col sm={4} md={4} lg={4}>
-                    <Button variant="primary mt-4" type="button">
+                    <Button variant="success mt-4" type="button">
                     Agregar
                     </Button>
                 </Col>
@@ -79,6 +86,7 @@ const HomeComponent = (props) => {
             <Col sm={3} md={3} lg={3}></Col>
          </Row>
        </Container>
+       
   )
 }
 export default HomeComponent
