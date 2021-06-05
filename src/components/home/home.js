@@ -12,6 +12,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './home.css';
 
+
 const React = require('react');
 
 const HomeComponent = (props) => {
@@ -35,7 +36,8 @@ const HomeComponent = (props) => {
               </Button> 
               <Button variant="danger mt-4" type="button">
               Borrar
-              </Button> 
+              </Button>
+
               </Col>
             </Row>
             
