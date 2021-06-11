@@ -7,6 +7,7 @@ import {
   Form,
   Row,
   Col,
+  Table,
   Jumbotron
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,6 +25,29 @@ const HomeComponent = (props) => {
           <Col sm={6} md={6} lg={6}>
             {/* row que se repite */}
             <Row className="mb-2">
+              
+            <Table className="mt-5 table-color" bordered hover size="md"> 
+            <tr>
+            <thead>
+            <tr>
+              <th className="thead-color">Color</th>
+              <th>Frecuencia</th>
+            </tr>
+          </thead>
+
+                    <td>
+                      <Row sm={6} md={6} lg={6}>
+                        <Col sm={6} md={6} lg={6}>
+                          <Button variant="warning">Editar</Button>
+                        </Col>
+                        <Col sm={6} md={6} lg={6}>
+                          <Button variant="danger">Borrar</Button>
+                        </Col>
+                      </Row>
+                    </td>
+            </tr>
+            </Table> 
+
               <Col sm={4} md={4} lg={4}>
                 Rojo
               </Col>
@@ -38,8 +62,10 @@ const HomeComponent = (props) => {
               Borrar
               </Button>
 
-              </Col>
+              </Col>  
             </Row>
+            
+            
             
           </Col>
           <Col sm={3} md={3} lg={3}></Col>
