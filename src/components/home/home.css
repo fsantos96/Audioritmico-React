@@ -7,3 +7,10 @@
     align-items: center;
     height: 25vh;
 }
+
+.table-color {
+    width: 40em;
+}
+.thead-color {
+    width: 20em;
+}

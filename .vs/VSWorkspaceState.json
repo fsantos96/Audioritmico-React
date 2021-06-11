@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\public",
+    "\\src",
+    "\\src\\components",
+    "\\src\\components\\device",
+    "\\src\\components\\home",
+    "\\src\\components\\manager",
+    "\\src\\components\\manager-form",
+    "\\src\\services"
+  ],
+  "SelectedNode": "\\public\\logo-site.png",
+  "PreviewInSolutionExplorer": false
+}

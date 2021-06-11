@@ -7,9 +7,13 @@ import {
   Form,
   Row,
   Col,
+  Table,
+  Jumbotron
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './home.css';
+
+
 const React = require('react');
 
 const HomeComponent = (props) => {
@@ -21,6 +25,29 @@ const HomeComponent = (props) => {
           <Col sm={6} md={6} lg={6}>
             {/* row que se repite */}
             <Row className="mb-2">
+              
+            <Table className="mt-5 table-color" bordered hover size="md"> 
+            <tr>
+            <thead>
+            <tr>
+              <th className="thead-color">Color</th>
+              <th>Frecuencia</th>
+            </tr>
+          </thead>
+
+                    <td>
+                      <Row sm={6} md={6} lg={6}>
+                        <Col sm={6} md={6} lg={6}>
+                          <Button variant="warning">Editar</Button>
+                        </Col>
+                        <Col sm={6} md={6} lg={6}>
+                          <Button variant="danger">Borrar</Button>
+                        </Col>
+                      </Row>
+                    </td>
+            </tr>
+            </Table> 
+
               <Col sm={4} md={4} lg={4}>
                 Rojo
               </Col>
@@ -28,9 +55,17 @@ const HomeComponent = (props) => {
                 63Hz
               </Col>
               <Col sm={4} md={4} lg={4}>
-                lapiz
-              </Col>
+              <Button variant="primary mt-4" type="button">
+              Editar
+              </Button> 
+              <Button variant="danger mt-4" type="button">
+              Borrar
+              </Button>
+
+              </Col>  
             </Row>
+            
+            
             
           </Col>
           <Col sm={3} md={3} lg={3}></Col>
@@ -69,7 +104,7 @@ const HomeComponent = (props) => {
                     </Form.Group>
                   </Col>
                   <Col sm={4} md={4} lg={4}>
-                    <Button variant="primary mt-4" type="button">
+                    <Button variant="success mt-4" type="button">
                     Agregar
                     </Button>
                 </Col>
@@ -79,6 +114,7 @@ const HomeComponent = (props) => {
             <Col sm={3} md={3} lg={3}></Col>
          </Row>
        </Container>
+       
   )
 }
 export default HomeComponent
