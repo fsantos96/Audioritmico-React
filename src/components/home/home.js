@@ -12,106 +12,215 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './home.css';
-
+import * as apiService from '../../services/apiService';
+import ConfigForm from '../ConfigForm';
 
 const React = require('react');
+const { useEffect, useState} = require('react');
+const colors = [
+  { idColor: 0, text: 'Rojo'},
+  { idColor: 1, text: 'Azul'},
+  { idColor: 2, text: 'Verde'},
+  { idColor: 3, text: 'Blanco'},
+  { idColor: 4, text: 'Cyan'},
+  { idColor: 5, text: 'Amarillo'},
+  { idColor: 6, text: 'Magenta'}
+]
+const ranges = [
+  { idRange: 0, text: '0 - 31', min: 0, max: 31},
+  { idRange: 1, text: '32 - 63', min: 32, max: 63},
+  { idRange: 2, text: '64 - 125', min: 64, max: 125},
+  { idRange: 3, text: '126 - 250', min: 126, max: 250},
+  { idRange: 4, text: '251 - 500', min: 251, max: 500},
+  { idRange: 5, text: '501 - 1000', min: 501, max: 1000}
+]
+var colorSelected = null;
+var rangeSelected = null;
 
 const HomeComponent = (props) => {
+  const [listConfigurations, setListConfigurations] = useState([])
+  const [configEdit, setConfigEdit] = useState(null)
+  const getColorsAvailables = () => {
+    return colors.filter((color, index) => {
+      const isUsed = listConfigurations.find(config => config.color == color.idColor);
+      return !isUsed;
+    })
+  };
+
+  const getRangessAvailables = () => {
+    return ranges.filter((range, index) => {
+      const isUsed = listConfigurations.find(config => config.rangeType == range.idRange);
+      return !isUsed;
+    })
+  };
+  
+  const getConfigFormated = (data) => {
+    var listFormated = data.configurations.map(item => {
+      return { ...item, edit: false }
+    })
+
+    return listFormated;
+  }
+
+  const deleteConfig = (id) => {
+    apiService.deleteConfiguration(id).then(data => {
+      setListConfigurations(data.configurations);
+    })
+  }
+
+  const handlerSelected = (event, select, isEdit) => {
+    if(!isEdit) {
+      if(select == 'color') {
+        colorSelected = event.target.value;
+      } else {
+        rangeSelected = event.target.value
+      }
+    } else {
+      const value = {};
+      value[select == 'color' ? 'color' : 'rangeType'] = event.target.value;
+      const configEdited = {
+        ...configEdit,
+        ...value 
+      }
+
+      setConfigEdit(configEdited)
+    }
+  }
+
+  const saveConfig = () => {
+    apiService.saveConfig(colorSelected, rangeSelected, {min: ranges[rangeSelected].min,  max:ranges[rangeSelected].max}).then(data => {
+      setListConfigurations(getConfigFormated(data));
+    })
+  }
+
+  const disabledEditMode = () => {
+    return listConfigurations.map(config => {
+      config.edit = false;
+      return config;
+    });
+  }
+
+  const handlerEditButton = (id) => {
+    const index = listConfigurations.findIndex( config => config.id == id);
+    var configutations = disabledEditMode();
+    configutations[index].edit = true;
+    console.log(configutations[index])
+    setConfigEdit({
+      ...configutations[index], 
+      colorText: colors[configutations[index].color].text,
+      rangeText: ranges[configutations[index].rangeType].text,
+    });
+    setListConfigurations(configutations);
+  }
+
+  const editConfig = () => {
+    console.log(configEdit)
+    const index = listConfigurations.findIndex( config => config.id == configEdit.id);
+    if(listConfigurations[index].color == configEdit.color && listConfigurations[index].rangeType == configEdit.rangeType) {
+      setConfigEdit(null);
+      setListConfigurations(disabledEditMode());
+      return;
+    }
+    
+    apiService.editConfig({
+      id: configEdit.id,
+      color: configEdit.color,
+      rangeType: configEdit.rangeType,
+      range: {
+        min: ranges[configEdit.rangeType].min,
+        max: ranges[configEdit.rangeType].max,
+      }
+    }).then(data => {
+      setConfigEdit(null);
+      setListConfigurations(getConfigFormated(data));
+    })
+  }
+
+  const cancelEdit = () => {
+    setConfigEdit(null);
+    setListConfigurations(disabledEditMode());
+  }
+
+  const colorsAvailable = getColorsAvailables();
+  const rangesAvailables = getRangessAvailables();
+  if(rangesAvailables[0] && colorsAvailable[0]) {
+    colorSelected = colorsAvailable[0].idColor;
+    rangeSelected = rangesAvailables[0].idRange;
+  }
+  useEffect(() => {
+    apiService.getAllConfigurations().then(data => {
+      setListConfigurations(getConfigFormated(data));
+    })
+  }, [])
   return (
 
   <Container>
-         <Row className="mt-5">
-          <Col sm={3} md={3} lg={3}></Col>
-          <Col sm={6} md={6} lg={6}>
-            {/* row que se repite */}
-            <Row className="mb-2">
-              
-            <Table className="mt-5 table-color" bordered hover size="md"> 
-            <tr>
-            <thead>
-            <tr>
-              <th className="thead-color">Color</th>
-              <th>Frecuencia</th>
-            </tr>
-          </thead>
-
-                    <td>
-                      <Row sm={6} md={6} lg={6}>
-                        <Col sm={6} md={6} lg={6}>
-                          <Button variant="warning">Editar</Button>
-                        </Col>
-                        <Col sm={6} md={6} lg={6}>
-                          <Button variant="danger">Borrar</Button>
-                        </Col>
-                      </Row>
-                    </td>
-            </tr>
-            </Table> 
-
-              <Col sm={4} md={4} lg={4}>
-                Rojo
-              </Col>
-              <Col sm={4} md={4} lg={4}>
-                63Hz
-              </Col>
-              <Col sm={4} md={4} lg={4}>
-              <Button variant="primary mt-4" type="button">
-              Editar
-              </Button> 
-              <Button variant="danger mt-4" type="button">
-              Borrar
-              </Button>
-
-              </Col>  
-            </Row>
-            
-            
-            
-          </Col>
-          <Col sm={3} md={3} lg={3}></Col>
-         </Row>
          <Row className="justify-content-center home-container">
           <Col sm={3} md={3} lg={3}></Col>
           <Col sm={6} md={6} lg={6}>
-              <Form>
-                <Row>
-                  <Col sm={4} md={4} lg={4}>
-                    <Form.Group>
-                      <Form.Label>Color</Form.Label>
-                      <Form.Control as="select" size="md">
-                          <option value="0" selected >Rojo</option>
-                          <option value="1">Azul</option>
-                          <option value="2">Verde</option>
-                          <option value="3">Blanco</option>
-                          <option value="4">Cyan</option>
-                          <option value="5">Amarillo</option>
-                          <option value="6">Magenta</option>
-                      </Form.Control>
-                    </Form.Group>
-                  </Col>
-                  <Col sm={4} md={4} lg={4}>
-                    <Form.Group>
-                      <Form.Label>Frecuencia</Form.Label>
-                      <Form.Control as="select" size="md">
-                          <option value="0" selected >0 - 31</option>
-                          <option value="1">31</option>
-                          <option value="2">63</option>
-                          <option value="3">125</option>
-                          <option value="4">250</option>
-                          <option value="5">500</option>
-                          <option value="6">1000</option>
-                      </Form.Control>
-                    </Form.Group>
-                  </Col>
-                  <Col sm={4} md={4} lg={4}>
-                    <Button variant="success mt-4" type="button">
-                    Agregar
-                    </Button>
-                </Col>
-                </Row>
-              </Form>
+              <ConfigForm
+                colorDefault={colorSelected}
+                rangeDefault={rangeSelected}
+                colors={colorsAvailable}
+                ranges={rangesAvailables}
+                selectAction={handlerSelected}
+                sendAction={saveConfig}
+              />
             </Col> 
             <Col sm={3} md={3} lg={3}></Col>
+         </Row>
+         <Row>
+          <Col sm={2} md={2} lg={2}></Col>
+          <Col sm={8} md={8} lg={8}>
+            {
+              configEdit && (
+                <Row className="mb-2">
+                  <ConfigForm
+                    configEdit={configEdit}
+                    colors={colorsAvailable}
+                    ranges={rangesAvailables}
+                    selectAction={handlerSelected}
+                    editAction={editConfig}
+                    cancelAction={cancelEdit}
+                  />
+                </Row>
+              )
+            }
+            <Row className="mb-2">
+            {
+              listConfigurations.length > 0 && <Table className="table-color" bordered hover size="md"> 
+                <thead>
+                  <tr>
+                    <th className="thead-color">Color</th>
+                    <th>Frecuencia</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    listConfigurations.map(config => !config.edit && (
+                      <tr>
+                        <td>{colors[config.color].text}</td>
+                        <td>{ranges[config.rangeType].text}</td>
+                        <td> 
+                          <Row sm={6} md={6} lg={6}>
+                            <Col sm={6} md={6} lg={6}>
+                              <Button variant="warning" onClick={() => handlerEditButton(config.id)}>Editar</Button>
+                            </Col>
+                            <Col sm={6} md={6} lg={6}>
+                              <Button onClick={() => deleteConfig(config.id)} variant="danger">Borrar</Button>
+                            </Col>
+                          </Row>
+                        </td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </Table>
+            }
+            </Row>
+          </Col>
+          <Col sm={2} md={2} lg={2}></Col>
          </Row>
        </Container>
        

@@ -2,9 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container, Row, Navbar, Jumbotron} from 'react-bootstrap';
 import HomeComponent from './components/home/home';
-import ManagerComponent from './components/manager';
-import DeviceComponent from './components/device';
-import ManagerForm from './components/manager-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 

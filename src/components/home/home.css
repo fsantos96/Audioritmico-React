@@ -14,3 +14,11 @@
 .thead-color {
     width: 20em;
 }
+.add-button {
+    margin-top: 2em;
+}
+.buttons-edit-container {
+    height: 2.4em;
+    display: flex;
+    margin-top: 2em;
+}
