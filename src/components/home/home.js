@@ -41,7 +41,7 @@ const HomeComponent = (props) => {
   const [listConfigurations, setListConfigurations] = useState([])
   const [configEdit, setConfigEdit] = useState(null)
   const getColorsAvailables = () => {
-    return colors.filter((color, index) => {
+    return colors.filter((color) => {
       const isUsed = listConfigurations.find(config => config.color == color.idColor);
       return !isUsed;
     })
@@ -55,6 +55,7 @@ const HomeComponent = (props) => {
   };
   
   const getConfigFormated = (data) => {
+    // esta funcion le agrega la propiedad edit a cada configuracion para saber si esta editando o no
     var listFormated = data.configurations.map(item => {
       return { ...item, edit: false }
     })
@@ -101,15 +102,19 @@ const HomeComponent = (props) => {
   }
 
   const handlerEditButton = (id) => {
+    // se obtiene el indice de la configuracion a editar
     const index = listConfigurations.findIndex( config => config.id == id);
+    // se reinicia el modo edicion para todas las configuraciones
     var configutations = disabledEditMode();
+    //se pasa a modo edicion el item elegido
     configutations[index].edit = true;
-    console.log(configutations[index])
+    // se actualiza la variable de estaddo que maneja el item a editar.
     setConfigEdit({
       ...configutations[index], 
       colorText: colors[configutations[index].color].text,
       rangeText: ranges[configutations[index].rangeType].text,
     });
+    // actualiza la lista de la tabla, con removiendo al elemento que se este actualizando.
     setListConfigurations(configutations);
   }
 
@@ -147,11 +152,19 @@ const HomeComponent = (props) => {
     colorSelected = colorsAvailable[0].idColor;
     rangeSelected = rangesAvailables[0].idRange;
   }
+
+  // el useEffect, recibe 2 params, el primero es la funcion que se ejecuta
+  // y el segundo indica 3 cosas
+  // 1- si no esta se ejecuta siempre que haya render
+  // 2- si esta pero es una array vacio se ejecuta unicamente un vez
+  // 3- es que este y el array tenga una variable, en este el useEffect se ejecuta cada vez que se altere esa variable
+
   useEffect(() => {
     apiService.getAllConfigurations().then(data => {
       setListConfigurations(getConfigFormated(data));
     })
-  }, [])
+  })
+
   return (
 
   <Container>
