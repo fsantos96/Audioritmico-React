@@ -163,7 +163,7 @@ const HomeComponent = (props) => {
     apiService.getAllConfigurations().then(data => {
       setListConfigurations(getConfigFormated(data));
     })
-  })
+  },[])
 
   return (
 

@@ -29,7 +29,7 @@
             <Col sm={4} md={4} lg={4}>
                 <Form.Group>
                 <Form.Label>Color</Form.Label>
-                <Form.Control as="select" size="md" defaultValue={configEdit ? configEdit.color : 0 } onChange={event => selectAction(event, 'color', configEdit !== null)}>
+                <Form.Control as="select" size="md" defaultValue={configEdit ? configEdit.color : 0 } onChange={event => selectAction(event, 'color', configEdit !== undefined)}>
                 {
                     configEdit && <option value={configEdit.color} selected >{configEdit.colorText}</option>
                 }
@@ -50,7 +50,7 @@
             <Col sm={4} md={4} lg={4}>
                 <Form.Group>
                 <Form.Label>Frecuencia</Form.Label>
-                <Form.Control as="select" size="md" defaultValue={configEdit ? configEdit.rangeType : 0 } onChange={event => selectAction(event, 'range', configEdit !== null)}>
+                <Form.Control as="select" size="md" defaultValue={configEdit ? configEdit.rangeType : 0 } onChange={event => selectAction(event, 'range', configEdit !== undefined)}>
                     {
                         configEdit && <option value={configEdit.rangeType} selected >{configEdit.rangeText}</option>
                     }
